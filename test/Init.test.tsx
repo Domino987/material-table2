@@ -1,11 +1,11 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Default as Thing } from '../stories/Thing.stories';
+import { Default as Table } from '../stories/MaterialTable.stories';
 
-describe('Thing', () => {
+describe('Table', () => {
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Thing />, div);
+    ReactDOM.render(<Table />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 });

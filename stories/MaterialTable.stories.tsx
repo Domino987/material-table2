@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { MaterialTable, Props } from '../src';
-import { Column } from 'react-table';
+import { MaterialTable} from '../src';
+import type { Data, Props } from '../src';
 
 const meta: Meta = {
   title: 'Welcome',
@@ -40,9 +40,9 @@ const meta: Meta = {
 
 export default meta;
 
-type TemplateType<D extends object> = Story<Props<D>>;
+type TemplateType<D extends Data> = Story<Props<D>>;
 
-const Template: TemplateType<object> = args => {
+const Template: TemplateType<Data> = args => {
   return <MaterialTable {...args} />;
 };
 
@@ -50,4 +50,30 @@ const Template: TemplateType<object> = args => {
 // https://storybook.js.org/docs/react/workflows/unit-testing
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  toolbarProps: { title: 'Material Table' },
+    columns: [
+      {
+        Header: 'Column 1',
+        accessor: 'col1', // accessor is the "key" in the data
+      },
+      {
+        Header: 'Column 2',
+        accessor: 'col2',
+      },
+    ],
+    data: [
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+    ],  
+};

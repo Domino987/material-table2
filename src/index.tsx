@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { useTable, useGlobalFilter, UseTableOptions } from 'react-table';
+import {
+  useTable,
+  useGlobalFilter,
+  UseTableOptions,
+  useFilters,
+} from 'react-table';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,7 +17,13 @@ import Paper from '@material-ui/core/Paper';
 import { TableToolbar } from './TableToolbar';
 import { Theme } from '@material-ui/core';
 
-export interface Props<D extends object> extends UseTableOptions<D> {
+interface Data {
+  Header: string;
+  accessor: string;
+  type?: 'boolean' | 'numeric' | 'date' | 'datetime' | 'time' | 'currency';
+}
+
+interface Props<D extends Data> extends UseTableOptions<D> {
   toolbarProps?: Partial<{
     title: string | JSX.Element;
     hideToolbar: boolean;
@@ -29,9 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const MaterialTable = <D extends object>(props: Props<D>) => {
+export const MaterialTable = <D extends Data>(props: Props<D>) => {
   const classes = useStyles();
   const { toolbarProps, ...tableProps } = props;
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -40,9 +52,8 @@ export const MaterialTable = <D extends object>(props: Props<D>) => {
     prepareRow,
     state,
     setGlobalFilter,
-  } = useTable(tableProps, useGlobalFilter);
-  console.log(2, headerGroups[0].headers[0].render('Header'));
-  console.log(2, headerGroups[0].headers[1].render('Header'));
+  } = useTable(tableProps, useGlobalFilter, useFilters);
+
   return (
     <Paper className={classes.paper}>
       <TableToolbar
@@ -68,9 +79,7 @@ export const MaterialTable = <D extends object>(props: Props<D>) => {
                     {// Render the header
                     column.render('Header')}
                     <div>
-                      {column.canFilter && column.Filter
-                        ? column.render('Filter')
-                        : null}
+                      {column.canFilter && column.Filter ? column.render('Filter') : null}
                     </div>
                   </TableCell>
                 ))}
@@ -103,3 +112,8 @@ export const MaterialTable = <D extends object>(props: Props<D>) => {
     </Paper>
   );
 };
+
+export type {
+  Data,
+  Props
+}

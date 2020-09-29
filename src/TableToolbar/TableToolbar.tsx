@@ -14,8 +14,8 @@ import { Theme } from '@material-ui/core';
 
 interface Props {
   title?: string | JSX.Element;
+  disableSearch?: boolean;
   hideToolbar?: boolean;
-  hideSearch?: boolean;
   searchValue?: string;
   setGlobalFilter: (nextValue: string) => void;
 }
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function TableToolbar({
   title,
   hideToolbar,
-  hideSearch,
+  disableSearch,
   searchValue = '',
   setGlobalFilter,
 }: Props) {
@@ -45,7 +45,7 @@ function TableToolbar({
     <MToolbar className={classes.root}>
       {title && renderToolbarTitle(title)}
       <div className={classes.spacer} />
-      {hideSearch !== false && renderSearch(searchValue, setGlobalFilter)}
+      {disableSearch !== true && renderSearch(searchValue, setGlobalFilter)}
     </MToolbar>
   );
 }

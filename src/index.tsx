@@ -16,18 +16,12 @@ import Paper from '@material-ui/core/Paper';
 
 import { TableToolbar } from './TableToolbar';
 import { Theme } from '@material-ui/core';
+import { transformColumTypes } from './utils/tableUtils';
+import type  { TableColumn,ToolbarProps } from '../types';
 
-interface Data {
-  Header: string;
-  accessor: string;
-  type?: 'boolean' | 'numeric' | 'date' | 'datetime' | 'time' | 'currency';
-}
-
-interface Props<D extends Data> extends UseTableOptions<D> {
-  toolbarProps?: Partial<{
-    title: string | JSX.Element;
-    hideToolbar: boolean;
-  }>;
+interface Props<D extends object> extends UseTableOptions<D> {
+  toolbarProps?: ToolbarProps;
+  columns: TableColumn<D>[] 
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,10 +34,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const MaterialTable = <D extends Data>(props: Props<D>) => {
+export function MaterialTable <D extends object>(props: Props<D>) {
   const classes = useStyles();
-  const { toolbarProps, ...tableProps } = props;
-
+  const { toolbarProps, columns: initialColumns, ...tableProps } = props;
+  const columns = React.useMemo(() => transformColumTypes(initialColumns), [initialColumns]);
   const {
     getTableProps,
     getTableBodyProps,
@@ -52,7 +46,7 @@ export const MaterialTable = <D extends Data>(props: Props<D>) => {
     prepareRow,
     state,
     setGlobalFilter,
-  } = useTable(tableProps, useGlobalFilter, useFilters);
+  } = useTable({columns, ...tableProps}, useGlobalFilter, useFilters);
 
   return (
     <Paper className={classes.paper}>
@@ -114,6 +108,5 @@ export const MaterialTable = <D extends Data>(props: Props<D>) => {
 };
 
 export type {
-  Data,
   Props
 }
